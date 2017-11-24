@@ -1,8 +1,6 @@
-import os
-
 class Configuration():
 	DEBUG = False
-	SECRET_KEY = os.urandom(24)
+	SECRET_KEY = 'my1_1s1e3c5r6e7t_ke2y'
 	
 	SQLALCHEMY_DATABASE_URI = 'mysql://sql11197214:zg2fdsHiMg@sql11.freemysqlhosting.net/sql11197214'
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
