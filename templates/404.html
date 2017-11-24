@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% from '_render_fields.html' import render_field, render_remember_field, render_radio_field %}
+{% block title %}404{% endblock %}
+{% block menu %}
+{% if current_user.is_authenticated %}
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('add_post', slice1=0, slice2=4) }}">Add posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('user_posts', slice1=0, slice2=4) }}">My posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+</li>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div class="card-body">
+<h1 style="color:red;">404</h1>
+<h3>Not Found</h3>
+</div>
+{% endblock %}
+{% block pagination %}
+{% endblock %}
+
+{% block widget %}
+<div class="card-body">
+<!-- time and degree -->
+<h1 style="color:#c576c2;">
+{{ time.strftime('%H:%M') }}
+<span style="padding-right:80px;"></span>
+<span style="color:#6fbf00;">{{ weather[0] }} &degC</span>
+</h1>
+<br>
+<!-- date  -->
+<h5 style="font-style:italic; color:#1abc9c;">
+{{ time.strftime('%B %d, %Y') }}
+</h5>
+<!-- weather  -->
+<h5 style="font-style:italic; color:#00a6ff;">
+<span style="padding-right:130px;"></span>
+ {{ weather[1] }}
+</h5>
+</div>
+{% endblock %}
+
+{% block login %}
+{% if current_user.is_authenticated %}
+<h5 class="card-header">Greetings, {{ current_user.appeal }}</h5>
+<div class="card-body">
+<p>ID: <span style="color:green;">{{ current_user.id }}</span></p>
+<p>Username: <span style="color:green;">{{ current_user.username }}</span></p>
+<p>Email: <span style="color:green;">{{ current_user.email }}</span></p>
+<p>Gender: <span style="color:green;">{{ current_user.sex }}</span></p>
+<p>About: <span style="color:green;">{{ current_user.about }}</span></p>
+<p>Posts: <span style="color:green;">{{ user_posts|length }}</span></p>
+</div>
+{% else %}
+<iframe align="left" width="350" height="200" src="https://www.youtube.com/embed/3KR2S3juSqU" frameborder="0" allowfullscreen></iframe>
+{% endif %}
+{% endblock %}
+{% block footer %}
+<!-- Footer -->
+<br><br><br>
+<br><br><br>
+<br>
+<footer class="py-5 bg-dark">
+<div class="container">
+<p class="m-0 text-center text-white">Copyright &copy; Little Blog 2017</p>
+</div>
+<!-- /.container -->
+</footer>
+{% endblock %}

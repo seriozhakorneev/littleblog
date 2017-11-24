@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}My posts{% endblock %}
+{% block menu %}
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('add_post', slice1=0, slice2=4) }}">Add posts</a>
+</li>
+<li class="nav-item active">
+	<a class="nav-link" href="{{ url_for('user_posts', slice1=0, slice2=4) }}">My posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+</li>
+{% endblock %}
+{% block content %}
+<!-- Blog Post -->
+{% if user_posts %}
+{% for post in view_posts %}
+<div class="card mb-4">
+<div class="card-body">
+<h2 class="card-title">{{ post.title }}</h2>
+<p class="card-text">{{ post.subtitle }}</p>
+<a href="{{ url_for('post', post_id=post.id) }}" class="btn btn-primary">Read More &rarr;</a>
+</div>
+<div class="card-footer text-muted"> 
+{{ post.date_posted.strftime('%B %d, %Y %H:%M') }} by
+<span style="color:#337ab7;">{{ post.post_author }}</span>
+</div>
+</div>
+{% endfor %}
+{% else %}
+<br>
+<h4 style="color:red;">You dont have any written post yet</h4>
+{% endif %}
+{% endblock %}
+{% block pagination %}
+{% if user_posts %}
+<!-- Pagination -->
+<ul class="pagination justify-content-center mb-4">
+{% if user_posts|length <= 4 %}
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% elif slice2 >= user_posts|length %}
+<li class="page-item">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% elif slice1 == 0 %}
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% else %}
+<li class="page-item">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item">
+<a class="page-link" href="{{ url_for('user_posts', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% endif %}
+</ul>
+{% endif %}
+{% endblock %}
+{% block widget %}
+<div class="card-body">
+<!-- time and degree -->
+<h1 style="color:#c576c2;">
+{{ time.strftime('%H:%M') }}
+<span style="padding-right:80px;"></span>
+<span style="color:#6fbf00;">{{ weather[0] }} &degC</span>
+</h1>
+<br>
+<!-- date  -->
+<h5 style="font-style:italic; color:#1abc9c;">
+{{ time.strftime('%B %d, %Y') }}
+</h5>
+<!-- weather  -->
+<h5 style="font-style:italic; color:#00a6ff;">
+<span style="padding-right:130px;"></span>
+ {{ weather[1] }}
+</h5>
+</div>
+{% endblock %}
+{% block login %}
+<h5 class="card-header">Greetings, {{ current_user.appeal }}</h5>
+<div class="card-body">
+<p>ID: <span style="color:green;">{{current_user.id }}</span></p>
+<p>Username: <span style="color:green;">{{current_user.username }}</span></p>
+<p>Email: <span style="color:green;">{{current_user.email }}</span></p>
+<p>Gender: <span style="color:green;">{{current_user.sex }}</span></p>
+<p>About: <span style="color:green;">{{current_user.about }}</span></p>
+<p>Posts: <span style="color:green;">{{ user_posts|length }}</span></p>
+</div>
+{% endblock %}

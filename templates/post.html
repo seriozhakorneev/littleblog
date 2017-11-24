@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% from '_render_fields.html' import render_field, render_remember_field, render_radio_field %}
+{% block title %}Post: {{ post.id }}{% endblock %}
+{% block menu %}
+{% if current_user.is_authenticated %}
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('add_post', slice1=0, slice2=4) }}">Add posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('user_posts', slice1=0, slice2=4) }}">My posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+</li>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div class="card mb-4">
+<div class="card-body">
+<h1 class="card-title">{{ post.title }}</h1>
+<h2 class="card-title">{{post.subtitle}}</h2>
+<p class="card-text">{{ post.content }}</p>
+</div>
+<div class="card-footer text-muted">Posted on 
+{{ post.date_posted.strftime('%B %d, %Y') }} by
+<!-- Кнопка активации -->
+<label title="click for info" class="userlabel" for="okno-1">{{ post.post_author }}</label>
+<!-- Модальное окно -->
+<div class="okno">
+  <input class="okno-open" id="okno-1" type="checkbox" hidden>
+  <div class="okno-wrap" aria-hidden="true" role="dialog">
+    <label class="okno-overlay" for="okno-1"></label>
+    <div class="okno-dialog">
+      <div class="okno-header">
+        <h2>Author Info</h2>
+        <label class="butn-close" for="okno-1" aria-hidden="true">×</label>
+      </div>
+      <div class="okno-body">
+        <p>ID: <span style="color:green;">{{ author.id }}</span></p>
+        <p>Username: <span style="color:green;">{{ author.username }}</span></p>
+        <p>Email: <span style="color:green;">{{ author.email }}</span></p>
+        <p>Gender: <span style="color:green;">{{ author.sex }}</span></p>
+        <p>About: <span style="color:green;">{{ author.about }}</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}
+{% block pagination %}
+{% if view_form == 'sign_in' %}
+<!-- Pagination -->
+<ul class="pagination justify-content-center mb-4">
+	{% if post.id == posts|length %}
+	<li class="page-item disabled">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id +1, view_form='sign_in') }}">&larr; Newer</a>
+	</li>
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id -1, view_form='sign_in') }}">Older &rarr;</a>
+	</li>
+	{% elif post.id == 1 %}
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id +1, view_form='sign_in') }}">&larr; Newer</a>
+	</li>
+	<li class="page-item disabled">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id -1, view_form='sign_in') }}">Older &rarr;</a>
+	</li>
+	{% else %}
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id +1, view_form='sign_in') }}">&larr; Newer</a>
+	</li>
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id -1, view_form='sign_in') }}">Older &rarr;</a>
+	</li>
+	{% endif %}
+</ul>
+{% else %}
+<!-- Pagination -->
+<ul class="pagination justify-content-center mb-4">
+	{% if post.id == posts|length %}
+	<li class="page-item disabled">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id +1, view_form='sign_up') }}">&larr; Newer</a>
+	</li>
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id -1, view_form='sign_up') }}">Older &rarr;</a>
+	</li>
+	{% elif post.id == 1 %}
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id +1, view_form='sign_up') }}">&larr; Newer</a>
+	</li>
+	<li class="page-item disabled">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id -1, view_form='sign_up') }}">Older &rarr;</a>
+	</li>
+	{% else %}
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id +1, view_form='sign_up') }}">&larr; Newer</a>
+	</li>
+	<li class="page-item">
+	<a class="page-link" href="{{ url_for('post', post_id=post.id -1, view_form='sign_up') }}">Older &rarr;</a>
+	</li>
+	{% endif %}
+</ul>
+{% endif %}
+{% endblock %}
+{% block widget %}
+<div class="card-body">
+<!-- time and degree -->
+<h1 style="color:#c576c2;">
+{{ time.strftime('%H:%M') }}
+<span style="padding-right:80px;"></span>
+<span style="color:#6fbf00;">{{ weather[0] }} &degC</span>
+</h1>
+<br>
+<!-- date  -->
+<h5 style="font-style:italic; color:#1abc9c;">
+{{ time.strftime('%B %d, %Y') }}
+</h5>
+<!-- weather  -->
+<h5 style="font-style:italic; color:#00a6ff;">
+<span style="padding-right:130px;"></span>
+ {{ weather[1] }}
+</h5>
+</div>
+{% endblock %}
+{% block login %}
+{% if view_form == 'sign_in' %}
+	{% if current_user.is_authenticated %}
+
+	<h5 class="card-header">Greetings, {{ current_user.appeal }}</h5>
+	<div class="card-body">
+	<p>ID: <span style="color:green;">{{ current_user.id }}</span></p>
+	<p>Username: <span style="color:green;">{{ current_user.username }}</span></p>
+	<p>Email: <span style="color:green;">{{ current_user.email }}</span></p>
+	<p>Gender: <span style="color:green;">{{ current_user.sex }}</span></p>
+	<p>About: <span style="color:green;">{{ current_user.about }}</span></p>
+	<p>Posts: <span style="color:green;">{{ user_posts|length }}</span></p>
+	</div>
+	{% else %}
+	<h5 class="card-header">Sign in
+	<span style="padding-right:10px;"></span>
+	<a href="{{ url_for('post',post_id=post.id,view_form='sign_up') }}">Sign up</a>
+	</h5>
+	<div class="card-body">
+	<!-- Flash messages -->
+	<div>
+	{% with messages = get_flashed_messages(with_categories=True) %}
+	{% if messages %}
+	{% for category, message in messages %}
+	<p class="{{ category }}">{{ message }}</p>
+	{% endfor %}
+	{% else %}
+	<p style="color:green;">Input the data below</p>
+	{% endif %}
+	{% endwith %}
+	</div>
+	<!-- end flash -->
+	<form method="POST" action="{{ url_for('post', post_id=post.id) }}">
+	{{ form_login.csrf_token }}
+	{{ render_field(form_login.username,placeholder=form_login.username.label.text) }}
+	<br>
+	{{ render_field(form_login.password,placeholder=form_login.password.label.text) }}
+	<br>
+	{{ render_field(form_login.recaptcha) }}
+	<br>
+	{{ render_remember_field(form_login.remember) }}
+	<br>
+	<br>
+	<input type="submit" class="btn btn-secondary" value="Submit">
+	<span style="padding-right:150px;"></span>
+	</form>
+	</div>
+	{% endif %}
+{% else %}
+	<h5 class="card-header"><a href="{{ url_for('post', post_id=post.id, view_form='sign_in') }}">Sign in</a>
+	<span style="padding-right:10px;"></span>Sign up
+	</h5>
+	<div class="card-body">
+	<form method="POST" action="{{ url_for('post', post_id=post.id, view_form='sign_up') }}">
+	<!-- Flash messages -->
+	<div>
+	{% with messages = get_flashed_messages(with_categories=True) %}
+	{% if messages %}
+	{% for category, message in messages %}
+	<p class="{{ category }}">{{ message }}</p>
+	{% endfor %}
+	{% else %}
+	<p style="color:green;">Input the data below</p>
+	{% endif %}
+	{% endwith %}
+	</div>
+	<!-- end flash -->
+	{{ form_signup.csrf_token }}
+	{{ render_field(form_signup.username,placeholder=form_signup.username.label.text) }}
+	<br>
+	{{ render_field(form_signup.email,placeholder=form_signup.email.label.text) }}
+	<br>
+	{{ render_field(form_signup.password,placeholder=form_signup.password.label.text) }}
+	<br>
+	{{ render_field(form_signup.confirm_password,placeholder=form_signup.confirm_password.label.text) }}
+	<br>
+	{{ render_field(form_signup.selects,placeholder=form_signup.password.label.text) }}
+	<br>
+	{{ render_field(form_signup.textarea,placeholder=form_signup.textarea.label.text) }}
+	<br>
+	{{ render_radio_field(form_signup.radios) }}
+	<br><br>
+	{{ render_field(form_signup.recaptcha) }}
+	<br>
+	<input type="submit" class="btn btn-secondary" value="Submit">
+	</form>
+	</div>
+{% endif %}
+{% endblock %}

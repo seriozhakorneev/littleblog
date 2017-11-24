@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% from '_render_fields.html' import render_field, render_textarea_field %}
+{% block title %}Add post{% endblock %}
+{% block menu %}
+<li class="nav-item active">
+	<a class="nav-link" href="{{ url_for('add_post', slice1=0, slice2=4) }}">Add posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('user_posts', slice1=0, slice2=4) }}">My posts</a>
+</li>
+<li class="nav-item">
+	<a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+</li>
+{% endblock %}
+{% block content %}
+<!-- Blog Post -->
+{% for post in posts %}
+<div class="card mb-4">
+<div class="card-body">
+<h2 class="card-title">{{ post.title }}</h2>
+<p class="card-text">{{ post.subtitle }}</p>
+<a href="{{ url_for('post', post_id=post.id) }}" class="btn btn-primary">Read More &rarr;</a>
+</div>
+<div class="card-footer text-muted"> 
+{{ post.date_posted.strftime('%B %d, %Y %H:%M') }} by
+<span style="color:#337ab7;">{{ post.post_author }}</span>
+</div>
+</div>
+{% endfor %}
+{% endblock %}
+{% block pagination %}
+{% if posts %}
+<!-- Pagination -->
+<ul class="pagination justify-content-center mb-4">
+{% if all_posts|length <= 4 %}
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% elif slice2 >= all_posts|length %}
+<li class="page-item">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% elif slice1 == 0 %}
+<li class="page-item disabled">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% else %}
+<li class="page-item">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice1-4, slice2=slice1) }}">&larr; Newer</a>
+</li>
+<li class="page-item">
+<a class="page-link" href="{{ url_for('add_post', slice1=slice2, slice2=slice2+4) }}">Older &rarr;</a>
+</li>
+{% endif %}
+</ul>
+{% endif %}
+{% endblock %}
+{% block widget %}
+<div class="card-body">
+<!-- time and degree -->
+<h1 style="color:#c576c2;">
+{{ time.strftime('%H:%M') }}
+<span style="padding-right:80px;"></span>
+<span style="color:#6fbf00;">{{ weather[0] }} &degC</span>
+</h1>
+<br>
+<!-- date  -->
+<h5 style="font-style:italic; color:#1abc9c;">
+{{ time.strftime('%B %d, %Y') }}
+</h5>
+<!-- weather  -->
+<h5 style="font-style:italic; color:#00a6ff;">
+<span style="padding-right:130px;"></span>
+ {{ weather[1] }}
+</h5>
+</div>
+{% endblock %}
+{% block login %}
+<h5 class="card-header">Add post</h5>
+<div class="card-body">
+	<form method="POST" action="{{ url_for('add_post', slice1=0, slice2=4) }}">
+		{{ form_blog.csrf_token }}
+		{{ render_field(form_blog.title,placeholder=form_blog.title.label.text) }}
+		<br>
+		{{ render_field(form_blog.subtitle,placeholder=form_blog.subtitle.label.text) }}
+		<br>
+		{{ render_textarea_field(form_blog.content,placeholder=form_blog.content.label.text) }}
+		<br>
+		{{ render_field(form_blog.recaptcha) }}
+		<br>
+		<button type="reset" class="btn btn-secondary">Clear</button>
+		<input type="submit" class="btn btn-secondary" value="Add">
+    </form>
+</div>
+{% endblock %}

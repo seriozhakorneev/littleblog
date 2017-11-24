@@ -1,0 +1,30 @@
+{% macro render_field(field) %}
+	<div class="input-group">
+	{{ field(class_="form-control",**kwargs)|safe }}
+	</div>
+	{% for error in field.errors %}
+	<span style="color:red;">{{ error }}</span>
+	{% endfor %}
+{% endmacro %}
+
+{% macro render_remember_field(field) %}
+	{{ field(**kwargs)|safe }}
+	{{ field.label.text }}
+{% endmacro %}
+
+{% macro render_radio_field(field) %}
+{% for subfield in field %}
+<label>
+	<span style="padding-right:40px;"></span><span>{{ subfield }} {{ subfield.label.text }}</span>
+</label>
+{% endfor %}
+{% endmacro %}
+
+{% macro render_textarea_field(field) %}
+<div class="input-group">
+	{{ field(rows="10",class_="form-control",**kwargs)|safe }}
+	</div>
+	{% for error in field.errors %}
+	<span style="color:red;">{{ error }}</span>
+	{% endfor %}
+{% endmacro %}
