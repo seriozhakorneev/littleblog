@@ -1,11 +1,9 @@
 import pyowm
+from config import pyowm_key, pyowm_city
 
 def get_weather_info():
-	# город
-	city = 'Tula, Russia'
-	# key с сайта pyowm
-	owm = pyowm.OWM("84295771eb6ed9a21ed8e939df427e93",language="en")
-	observation = owm.weather_at_place(city)
+	owm = pyowm.OWM(pyowm_key, language="en")
+	observation = owm.weather_at_place(pyowm_city)
 	w = observation.get_weather()
 	# температура
 	temperature = round(w.get_temperature('celsius')['temp']) 

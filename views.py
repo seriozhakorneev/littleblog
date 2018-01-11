@@ -4,7 +4,8 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from get_weather import get_weather_info
-from models_forms import User, Post, LoginForm, RegisterForm, BlogPost
+from models import *
+from forms import *
 import threading
 import time
 
@@ -18,7 +19,7 @@ def redirect_url(default='index'):
            url_for(default)
 
 def check_login_for_posts_length():
-	'''проверка авторизации для строки Posts'''
+	'''проверка авторизации для строки кол-ва постов Posts'''
 
 	user_posts = []
 	if current_user.is_authenticated:
@@ -32,7 +33,7 @@ def login():
 	# проверка наличия username
 	username = User.query.filter_by(username=form_login.username.data).first()
 	if username:
-		# проверка сходства пароля
+		# проверка пароля
 		if check_password_hash(username.password, form_login.password.data):
 			# логин
 			login_user(username, remember=form_login.remember.data)
@@ -48,7 +49,7 @@ def register():
 	'''проверка данных,регистрация'''
 
 	form = RegisterForm()
-	# проверка username и email на уникальность
+	# проверка username и email на уникальность в бд
 	username = User.query.filter_by(username=form.username.data).first()
 	email = User.query.filter_by(email=form.email.data).first()
 	if not username:
@@ -79,13 +80,13 @@ def load_user(user_id):
 
 @app.before_first_request
 def weather_info():
-	'''получаем погоду каждые 3 часа с первого запроса пользователя'''
+	'''получаем погоду каждые 3 часа'''
 	
 	def run():
 		global weather
 		while True:
 			weather = get_weather_info()
-			time.sleep(10800) # 3 hours
+			time.sleep(10800) # 3 часа
 	
 	thread = threading.Thread(target=run)
 	thread.start()
@@ -111,7 +112,7 @@ def logout():
 @app.route('/', defaults={'view_form': 'sign_in', 'slice1': 0, 'slice2': 4}, methods=['GET', 'POST'])
 @app.route('/<string:view_form>/<int:slice1>/<int:slice2>', methods=['GET', 'POST'])
 def index(view_form, slice1, slice2):
-	'''главная страница всех постов'''
+	'''главная страница'''
 	
 	time = datetime.now()
 	posts = Post.query.order_by(Post.date_posted.desc()).slice(slice1,slice2)
@@ -171,7 +172,7 @@ def post(post_id, view_form):
 @app.route('/user_posts/<int:slice1>/<int:slice2>')
 @login_required
 def user_posts(slice1, slice2):
-	'''все посты залогининого пользователя'''
+	'''все посты пользователя'''
 
 	time = datetime.now()
 	view_posts = Post.query.filter_by(post_author=current_user.username).order_by(Post.date_posted.desc()).slice(slice1,slice2)

@@ -27,23 +27,23 @@
 <label title="click for info" class="userlabel" for="okno-1">{{ post.post_author }}</label>
 <!-- Модальное окно -->
 <div class="okno">
-  <input class="okno-open" id="okno-1" type="checkbox" hidden>
-  <div class="okno-wrap" aria-hidden="true" role="dialog">
-    <label class="okno-overlay" for="okno-1"></label>
-    <div class="okno-dialog">
-      <div class="okno-header">
-        <h2>Author Info</h2>
-        <label class="butn-close" for="okno-1" aria-hidden="true">×</label>
-      </div>
-      <div class="okno-body">
-        <p>ID: <span style="color:green;">{{ author.id }}</span></p>
-        <p>Username: <span style="color:green;">{{ author.username }}</span></p>
-        <p>Email: <span style="color:green;">{{ author.email }}</span></p>
-        <p>Gender: <span style="color:green;">{{ author.sex }}</span></p>
-        <p>About: <span style="color:green;">{{ author.about }}</span></p>
-      </div>
-    </div>
-  </div>
+<input class="okno-open" id="okno-1" type="checkbox" hidden>
+<div class="okno-wrap" aria-hidden="true" role="dialog">
+<label class="okno-overlay" for="okno-1"></label>
+<div class="okno-dialog">
+<div class="okno-header">
+<h2>Author Info</h2>
+<label class="butn-close" for="okno-1" aria-hidden="true">×</label>
+</div>
+<div class="okno-body">
+<p>ID: <span style="color:green;">{{ author.id }}</span></p>
+<p>Username: <span style="color:green;">{{ author.username }}</span></p>
+<p>Email: <span style="color:green;">{{ author.email }}</span></p>
+<p>Gender: <span style="color:green;">{{ author.sex }}</span></p>
+<p>About: <span style="color:green;">{{ author.about }}</span></p>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>

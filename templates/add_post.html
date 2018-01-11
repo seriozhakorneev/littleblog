@@ -87,18 +87,18 @@
 {% block login %}
 <h5 class="card-header">Add post</h5>
 <div class="card-body">
-	<form method="POST" action="{{ url_for('add_post', slice1=0, slice2=4) }}">
-		{{ form_blog.csrf_token }}
-		{{ render_field(form_blog.title,placeholder=form_blog.title.label.text) }}
-		<br>
-		{{ render_field(form_blog.subtitle,placeholder=form_blog.subtitle.label.text) }}
-		<br>
-		{{ render_textarea_field(form_blog.content,placeholder=form_blog.content.label.text) }}
-		<br>
-		{{ render_field(form_blog.recaptcha) }}
-		<br>
-		<button type="reset" class="btn btn-secondary">Clear</button>
-		<input type="submit" class="btn btn-secondary" value="Add">
-    </form>
+<form method="POST" action="{{ url_for('add_post', slice1=0, slice2=4) }}">
+{{ form_blog.csrf_token }}
+{{ render_field(form_blog.title,placeholder=form_blog.title.label.text) }}
+<br>
+{{ render_field(form_blog.subtitle,placeholder=form_blog.subtitle.label.text) }}
+<br>
+{{ render_textarea_field(form_blog.content,placeholder=form_blog.content.label.text) }}
+<br>
+{{ render_field(form_blog.recaptcha) }}
+<br>
+<button type="reset" class="btn btn-secondary">Clear</button>
+<input type="submit" class="btn btn-secondary" value="Add">
+</form>
 </div>
 {% endblock %}
